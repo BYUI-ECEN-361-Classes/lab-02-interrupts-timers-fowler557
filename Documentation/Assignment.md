@@ -75,9 +75,9 @@ Note the speed of D1/D2/D3 - they should seem like a 3-bit binary counter.
 
 Once you have all three LEDs blinking properly, answer the following questions:
 
-1. At what frequency does D1 toggle? [*answer here*]
+1. At what frequency does D1 toggle? [*1Hz*]
 
-2. Do all LEDs toggle at *exactly* the same time? [*answer here*]
+2. Do all LEDs toggle at *exactly* the same time? [*No, they have been configured to toggle at different set frequencies. This allows us to see them acting as a binary counter.*]
 
 ## Part 2: Changing the clock tree
 
@@ -92,11 +92,11 @@ Change the clock tree to adjust the rates at which the LEDs blink.
 
 ## Part 2 Questions (3 pts)
 
-1. What has happened to the speed of the timers? [*answer here*]
+1. What has happened to the speed of the timers? [*It looks like it slowed considerably. I can tell it is counting in binary now*]
 
-2. What is the new frequency of LED D1? [*answer here*]
+2. What is the new frequency of LED D1? [*looks to be around once per every 4 seconds. Or in other words, .25Hz*]
 
-3. When we changed the frequency, did the Seven-Segment Light update rate change?  (hint, look at the clocks driving the APB1, APB2 buses and which timers are on which bus.  Recall that the Seven-Segment timer is Tim17) [*answer here*]
+3. When we changed the frequency, did the Seven-Segment Light update rate change?  (hint, look at the clocks driving the APB1, APB2 buses and which timers are on which bus.  Recall that the Seven-Segment timer is Tim17) [*Yes, due to the fact that the timers we use are on either of the APB1 or APB2 prescalers bus.*]
 
 ## Part 3: Reaction Timer (5 pts)
 
@@ -139,4 +139,4 @@ For Seven Segment Display Functions, check the MultiFunctionShield.h header file
 
 * Currently, the reaction tester can have a wait time anywhere between 0 and 7000 milliseconds, Implement a minimum wait time in such a way that doesn't change the potential maximum wait time
 
-If you do any of these items - just mention what and how it worked, [*here*].
+If you do any of these items - just mention what and how it worked, [*I chose to do the change the go lights to be the 4 LED's. To implement this I had to find out how the LED's were turned on in the first place. It turns out that you need to write a low for the LED's to turn on. I implemented some pin write lines to each of the LED's. I also had to stop their timeres while in the call back function. After displaying the results, I turned the timers back on.  *].

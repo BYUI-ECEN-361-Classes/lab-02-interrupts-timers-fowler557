@@ -19,6 +19,7 @@
 /* This is for Part-3 of Lab-02, ECEN-361
  * Student to only change parts between the comment blocks:
 	  ***** STUDENT TO FILL IN START
+
  *
  */
 
@@ -52,6 +53,9 @@ void show_a_random_number()
 		HAL_Delay(2000);  // this is how long before the counter on the 7-Seg display
 		}
 	}
+extern TIM_HandleTypeDef htim16;
+extern TIM_HandleTypeDef htim6;
+extern TIM_HandleTypeDef htim7;
 
 void got_start()
 	{
@@ -62,15 +66,34 @@ void got_start()
 		 3.) Turn on all the 7-Seg lights (that's "GO"
 		 4.) Start the Reaction timer. (Hint: Use the same function you used to start the other timers)
 		*/
+
+		// Stop competing timers to gain manual control of LEDs
+		HAL_TIM_Base_Stop_IT(&htim16);  // Stop toggling LED_D1
+		HAL_TIM_Base_Stop_IT(&htim6);   // Stop toggling LED_D2
+		HAL_TIM_Base_Stop_IT(&htim7);   // Stop toggling LED_D3
+
+
 		started_doing_reaction_timers = true;
 	    Clear_LEDs();
 		rand_millisec =  rand() % upper_limit_millisec_to_wait;
 
 	  /**************** STUDENT TO FILL IN START HERE ********************/
-		// Step 1
-		// Step 2
-		// Step 3
-		// Step 4
+
+
+		MultiFunctionShield_Clear();
+		Display_Waiting();// Step 1
+
+		HAL_Delay(rand_millisec);// Step 2
+
+		MultiFunctionShield_Clear();
+
+		HAL_GPIO_WritePin(LED_D1_GPIO_Port, LED_D1_Pin, GPIO_PIN_RESET); // Set LED_D1 to LOW and turn it on
+		HAL_GPIO_WritePin(LED_D2_GPIO_Port, LED_D2_Pin, GPIO_PIN_RESET); // Set LED_D2 to LOW and turn it on
+		HAL_GPIO_WritePin(LED_D3_GPIO_Port, LED_D3_Pin, GPIO_PIN_RESET); // Set LED_D3 to LOW and turn it on
+		HAL_GPIO_WritePin(LED_D4_GPIO_Port, LED_D4_Pin, GPIO_PIN_RESET); // Set LED_D4 to LOW and turn it on
+		//Display_All();// Step 3
+
+		HAL_TIM_Base_Start_IT(&htim3);// Step 4
 	  /**************** STUDENT TO FILL IN END  HERE ********************/
 	}
 void got_stop()
@@ -85,12 +108,19 @@ void got_stop()
 
 
 	  /**************** STUDENT TO FILL IN START HERE ********************/
-      // 1.) Stop the random timer // Random timer is timer3
 
+    	Clear_LEDs();
+      // 1.) Stop the random timer // Random timer is timer3
+		HAL_TIM_Base_Stop_IT(&htim3);
       // 2.) Read the value of the timer -- this step provided
 		last_reaction_time_in_millisec = __HAL_TIM_GetCounter(&htim3) / 10; // Why is it divide by 10?
-
 	  // 3.) Display the value
+		MultiFunctionShield_Display (last_reaction_time_in_millisec);
+
+	    // Restart the other timers after showing results
+	    HAL_TIM_Base_Start_IT(&htim16);
+	    HAL_TIM_Base_Start_IT(&htim6);
+	    HAL_TIM_Base_Start_IT(&htim7);
 
 
       /**************** STUDENT TO FILL IN END HERE ********************/
